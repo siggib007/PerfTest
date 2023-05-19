@@ -240,19 +240,31 @@ def main():
 
   objRanWord=wonderwords.RandomWord()
 
-  print("Starting the test")
+  tStart = time.time()
+  now = time.asctime()
+  print("Starting the test at {}".format(now))
 
   for i in range(iIterations):
-    print("On iteration {} of {}".format(i,iIterations))
+    print("On iteration {} of {}".format(i, iIterations), end="\r")
     strDataInsert = "INSERT INTO perf (teststr,uuid) VALUES('{}', '{}');".format(
         " ".join(objRanWord.random_words(random.randint(3, 15))), uuid.uuid4())
     dbCursor = Query(SQL=strDataInsert, dbConn=dbConn)
     if isinstance(dbCursor, str):
       print("Results is only the following string: {}".format(dbCursor))
-    else:
-      print("Query complete.")
-    print(strDataInsert)
+    #else:
+    #  print("Query complete.")
 
+  tStop = time.time()
+  iElapseSec = tStop - tStart
+  iMin, iSec = divmod(iElapseSec, 60)
+  iHours, iMin = divmod(iMin, 60)
+
+  now = time.asctime()
+  print("Completed at {}".format(now))
+  print("Took {0:.2f} seconds to complete, which is {1} hours, {2} minutes and {3:.2f} seconds.".format(
+      iElapseSec, iHours, iMin, iSec))
+  print("{} completed successfully on {}".format(
+      strScriptName, strScriptHost))
 
 if __name__ == '__main__':
     main()
